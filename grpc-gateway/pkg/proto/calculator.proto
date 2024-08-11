@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package calculator;
+
+option go_package = "path/to/your/package/calculator";
+
+// Import gRPC-Gateway annotations
+import "google/api/annotations.proto";
+
+// Calculator service definition
+service Calculator {
+    // Unary RPC for addition
+    rpc Add(AddRequest) returns (AddResponse) {
+        option (google.api.http) = {
+            post: "/v1/calculator/add"
+            body: "*"
+        };
+    }
+
+    // Unary RPC for subtraction
+    rpc Subtract(SubtractRequest) returns (SubtractResponse) {
+        option (google.api.http) = {
+            post: "/v1/calculator/subtract"
+            body: "*"
+        };
+    }
+
+    // Unary RPC for multiplication
+    rpc Multiply(MultiplyRequest) returns (MultiplyResponse) {
+        option (google.api.http) = {
+            post: "/v1/calculator/multiply"
+            body: "*"
+        };
+    }
+
+    // Unary RPC for division
+    rpc Divide(DivideRequest) returns (DivideResponse) {
+        option (google.api.http) = {
+            post: "/v1/calculator/divide"
+            body: "*"
+        };
+    }
+}
+
+// Request and response messages for Add
+message AddRequest {
+    double a = 1;
+    double b = 2;
+}
+
+message AddResponse {
+    double result = 1;
+}
+
+// Request and response messages for Subtract
+message SubtractRequest {
+    double a = 1;
+    double b = 2;
+}
+
+message SubtractResponse {
+    double result = 1;
+}
+
+// Request and response messages for Multiply
+message MultiplyRequest {
+    double a = 1;
+    double b = 2;
+}
+
+message MultiplyResponse {
+    double result = 1;
+}
+
+// Request and response messages for Divide
+message DivideRequest {
+    double a = 1;
+    double b = 2;
+}
+
+message DivideResponse {
+    double result = 1;
+}

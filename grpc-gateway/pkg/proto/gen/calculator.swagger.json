@@ -1,0 +1,274 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "calculator.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Calculator"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/calculator/add": {
+      "post": {
+        "summary": "Unary RPC for addition",
+        "operationId": "Calculator_Add",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/calculatorAddResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/calculatorAddRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Calculator"
+        ]
+      }
+    },
+    "/v1/calculator/divide": {
+      "post": {
+        "summary": "Unary RPC for division",
+        "operationId": "Calculator_Divide",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/calculatorDivideResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/calculatorDivideRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Calculator"
+        ]
+      }
+    },
+    "/v1/calculator/multiply": {
+      "post": {
+        "summary": "Unary RPC for multiplication",
+        "operationId": "Calculator_Multiply",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/calculatorMultiplyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/calculatorMultiplyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Calculator"
+        ]
+      }
+    },
+    "/v1/calculator/subtract": {
+      "post": {
+        "summary": "Unary RPC for subtraction",
+        "operationId": "Calculator_Subtract",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/calculatorSubtractResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/calculatorSubtractRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Calculator"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "calculatorAddRequest": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "number",
+          "format": "double"
+        },
+        "b": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "Request and response messages for Add"
+    },
+    "calculatorAddResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "calculatorDivideRequest": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "number",
+          "format": "double"
+        },
+        "b": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "Request and response messages for Divide"
+    },
+    "calculatorDivideResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "calculatorMultiplyRequest": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "number",
+          "format": "double"
+        },
+        "b": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "Request and response messages for Multiply"
+    },
+    "calculatorMultiplyResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "calculatorSubtractRequest": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "number",
+          "format": "double"
+        },
+        "b": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "Request and response messages for Subtract"
+    },
+    "calculatorSubtractResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
