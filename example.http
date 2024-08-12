@@ -47,5 +47,5 @@ Content-Type: application/json
 
 
 # Fibonacci Request
-GET http://localhost:9901/api/v1/calculator/fibonacci/10000000
+GET http://localhost:9901/api/v1/calculator/fibonacci/98
 Content-Type: application/json

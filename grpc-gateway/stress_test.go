@@ -20,6 +20,9 @@ type requestPayload struct {
 }
 
 func main() {
+	// it shows your line code while print
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	endpoints := []struct {
 		name   string
 		url    string
@@ -30,25 +33,52 @@ func main() {
 		{"Subtract", "http://localhost:9901/api/v1/calculator/subtract", "POST", requestPayload{A: 5, B: 3}},
 		{"Multiply", "http://localhost:9901/api/v1/calculator/multiply", "POST", requestPayload{A: 2, B: 4}},
 		{"Divide", "http://localhost:9901/api/v1/calculator/divide", "POST", requestPayload{A: 10, B: 2}},
-		{"Fibonacci", "http://localhost:9901/api/v1/calculator/fibonacci", "POST", requestPayload{N: 100}},
+		{"Fibonacci", "http://localhost:9901/api/v1/calculator/fibonacci/1000000", "GET", requestPayload{N: 1000}},
 	}
 
 	var wg sync.WaitGroup
-	g, ctx := errgroup.WithContext(context.Background())
+	ctx, _ := context.WithTimeout(context.Background(), 100*time.Second)
+	g, ctx := errgroup.WithContext(ctx)
 
-	for _, endpoint := range endpoints {
-		time.Sleep(time.Second)
-		for i := 0; i < 100; i++ { // 1000 requests per endpoint
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for _, endpoint := range endpoints {
 			wg.Add(1)
-			e := endpoint // avoid closure issue
-			g.Go(func() error {
+			go func(e struct {
+				name   string
+				url    string
+				method string
+				body   requestPayload
+			},
+			) {
 				defer wg.Done()
-				return sendRequest(ctx, e.url, e.method, e.body)
-			})
+				for i := 0; i < 10000; i++ {
+					wg.Add(1)
+					g.Go(func() error {
+						defer wg.Done()
+						return sendRequest(ctx, e.url, e.method, e.body)
+					})
+				}
+			}(endpoint)
 		}
-	}
+	}()
 
-	// Wait for all requests to finish
+	// wg.Add(1)
+	// go func() {
+	// 	defer wg.Done()
+	// 	for _, endpoint := range endpoints {
+	// 		for i := 0; i < 10000; i++ {
+	// 			wg.Add(1)
+	// 			e := endpoint
+	// 			g.Go(func() error {
+	// 				defer wg.Done()
+	// 				return sendRequest(ctx, e.url, e.method, e.body)
+	// 			})
+	// 		}
+	// 	}
+	// }()
+
 	wg.Wait()
 	if err := g.Wait(); err != nil {
 		fmt.Printf("Stress test failed: %v\n", err)
@@ -60,20 +90,28 @@ func main() {
 func sendRequest(ctx context.Context, url, method string, body requestPayload) error {
 	bodyBytes, err := json.Marshal(body)
 	if err != nil {
+		log.Println(err)
 		return fmt.Errorf("failed to marshal request body: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, method, url, bytes.NewBuffer(bodyBytes))
+	buffer := bytes.NewBuffer(bodyBytes)
+	if method == http.MethodGet {
+		buffer = &bytes.Buffer{}
+	}
+
+	req, err := http.NewRequestWithContext(ctx, method, url, buffer)
 	if err != nil {
+		log.Println(err)
 		return fmt.Errorf("failed to create request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 30 * time.Second,
 	}
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Println(err)
 		return fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()

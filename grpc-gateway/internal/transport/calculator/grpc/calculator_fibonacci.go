@@ -23,7 +23,7 @@ func (c *calculatorGRPCServer) Fibonacci(ctx context.Context, req *calculator.Fi
 
 	return &calculator.FibonacciResponse{
 		Result:         result,
-		TimeMilisecond: int32(executionTime.Milliseconds()),
-		TimeSecond:     int32(executionTime.Seconds()),
+		TimeMilisecond: float64(executionTime.Milliseconds()),
+		TimeSecond:     float64(executionTime.Seconds()),
 	}, nil
 }

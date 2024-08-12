@@ -103,16 +103,16 @@ message FibonacciRequest {
 
 message FibonacciResponse {
     int32 result = 1;
-    int32 time_milisecond = 2;
-    int32 time_second = 3;
+    double time_milisecond = 2;
+    double time_second = 3;
 }
 
 // Request and response messages for Looping
 message LoopingRequest {
-    int32 n = 1;
+    double n = 1;
 }
 
 message LoopingResponse {
-    int32 time_milisecond = 1;
-    int32 time_second = 2;
+    double time_milisecond = 1;
+    double time_second = 2;
 }

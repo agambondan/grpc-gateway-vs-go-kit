@@ -8,4 +8,5 @@ type CalculatorService interface {
 	Subtract(ctx context.Context, a, b float64) (float64, error)
 	Multiply(ctx context.Context, a, b float64) (float64, error)
 	Divide(ctx context.Context, a, b float64) (float64, error)
+	Fibonacci(ctx context.Context, n int32) (int32, error)
 }

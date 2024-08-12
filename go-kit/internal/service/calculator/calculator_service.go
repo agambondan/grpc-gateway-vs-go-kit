@@ -8,7 +8,7 @@ import (
 
 type calculatorService struct {
 	value float64
-	mutex *sync.Mutex
+	mutex sync.Mutex
 }
 
 func NewCalculatorService() service.CalculatorService {

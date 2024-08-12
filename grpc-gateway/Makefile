@@ -1,10 +1,6 @@
 run:
 	go run cmd/main.go
 
-clean:
-	rm proto/gen/promotion/*.go
-	rm proto/gen/promotion/*.json
-
 generate:
 	buf generate
 
