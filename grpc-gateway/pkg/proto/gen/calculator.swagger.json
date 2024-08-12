@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/calculator/add": {
+    "/calculator/add": {
       "post": {
         "summary": "Unary RPC for addition",
         "operationId": "Calculator_Add",
@@ -49,7 +49,7 @@
         ]
       }
     },
-    "/v1/calculator/divide": {
+    "/calculator/divide": {
       "post": {
         "summary": "Unary RPC for division",
         "operationId": "Calculator_Divide",
@@ -82,7 +82,71 @@
         ]
       }
     },
-    "/v1/calculator/multiply": {
+    "/calculator/fibonacci/{n}": {
+      "get": {
+        "summary": "Unary RPC for Fibonacci sequence",
+        "operationId": "Calculator_Fibonacci",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/calculatorFibonacciResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Calculator"
+        ]
+      }
+    },
+    "/calculator/looping/{n}": {
+      "get": {
+        "summary": "Unary RPC for Looping sequence",
+        "operationId": "Calculator_Looping",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/calculatorLoopingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Calculator"
+        ]
+      }
+    },
+    "/calculator/multiply": {
       "post": {
         "summary": "Unary RPC for multiplication",
         "operationId": "Calculator_Multiply",
@@ -115,7 +179,7 @@
         ]
       }
     },
-    "/v1/calculator/subtract": {
+    "/calculator/subtract": {
       "post": {
         "summary": "Unary RPC for subtraction",
         "operationId": "Calculator_Subtract",
@@ -193,6 +257,36 @@
         "result": {
           "type": "number",
           "format": "double"
+        }
+      }
+    },
+    "calculatorFibonacciResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeMilisecond": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeSecond": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "calculatorLoopingResponse": {
+      "type": "object",
+      "properties": {
+        "timeMilisecond": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeSecond": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

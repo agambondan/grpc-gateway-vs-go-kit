@@ -3,11 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	calculatorservice "git.bluebird.id/firman.agam/grpc-gateway/internal/service/calculator"
 	"git.bluebird.id/firman.agam/grpc-gateway/internal/transport"
 	calculatorgrpc "git.bluebird.id/firman.agam/grpc-gateway/internal/transport/calculator/grpc"
 	calculatorhttp "git.bluebird.id/firman.agam/grpc-gateway/internal/transport/calculator/http"
@@ -20,16 +23,23 @@ import (
 	"google.golang.org/grpc/health"
 )
 
+func init() {
+	env.LoadEnv()
+}
+
 func main() {
 	var err error
 	logger := zaplog.WithContext(context.Background())
 
 	healthGrpcServer := healthgrpc.NewHealthCheckServer()
 
-	grpcServer := transport.NewGRPCServer("")
+	calculatorService := calculatorservice.NewCalculatorService()
+	calculatorGRPC := calculatorgrpc.NewCalculatorGRPCServer(calculatorService)
+
+	grpcServer := transport.NewGRPCServer(env.GRPCPort)
 
 	go func() {
-		grpcServer.RegisterService(calculatorgrpc.NewPromotionGRPCServerRegistrar(nil))
+		grpcServer.RegisterService(calculatorgrpc.NewPromotionGRPCServerRegistrar(calculatorGRPC))
 		grpcServer.RegisterService(healthgrpc.NewHealthGRPCServerRegistrar(healthGrpcServer))
 
 		err = grpcServer.Start()
@@ -41,6 +51,14 @@ func main() {
 	httpServer := transport.NewHTTPServer(env.HTTPPort, env.GRPCPort)
 
 	go func() {
+		httpServer.RegisterHTTPHandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		})
+
+		httpServer.RegisterHTTPHandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+			io.WriteString(w, "pong from v2")
+		})
+
 		err = httpServer.RegisterGRPCGatewayHandler(calculatorhttp.NewPromotionGRPCGatewayRegistrar())
 		if err != nil {
 			logger.Fatal("failed to register promotion http server", zap.Error(err))

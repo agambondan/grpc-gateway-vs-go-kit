@@ -25,6 +25,7 @@ func GRPCMiddleware(ctx context.Context, req any, info *grpc.UnaryServerInfo, ha
 	defer logger.Sync()
 
 	response, err := handler(ctx, req)
+
 	executionTime := time.Since(start).Milliseconds()
 
 	logger.Info("GRPC Request",
@@ -69,7 +70,8 @@ func HTTPMiddleware(next http.Handler) http.Handler {
 		}
 
 		next.ServeHTTP(recorder, r)
-		executionTime := time.Since(start).Milliseconds()
+
+		executionTime := time.Since(start)
 
 		var responseMap map[string]interface{}
 		if body := recorder.body.Bytes(); len(body) > 0 {
@@ -81,7 +83,8 @@ func HTTPMiddleware(next http.Handler) http.Handler {
 			zap.Any("request", requestMap),
 			zap.Any("response", responseMap),
 			zap.Int("status", recorder.status),
-			zap.Int64("execution_time", executionTime),
+			zap.Int64("execution_time_microseconds", executionTime.Microseconds()),
+			zap.Int64("execution_time_milliseconds", executionTime.Milliseconds()),
 		)
 	})
 }

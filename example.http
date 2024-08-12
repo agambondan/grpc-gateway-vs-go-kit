@@ -1,0 +1,51 @@
+# Add Request
+POST http://localhost:9901/api/v1/calculator/add
+Content-Type: application/json
+
+{
+    "a": 10,
+    "b": 5
+}
+
+###
+
+
+# Subtract Request
+POST http://localhost:9901/api/v1/calculator/subtract
+Content-Type: application/json
+
+{
+    "a": 10,
+    "b": 5
+}
+
+###
+
+
+# Multiply Request
+POST http://localhost:9901/api/v1/calculator/multiply
+Content-Type: application/json
+
+{
+    "a": 10,
+    "b": 5
+}
+
+###
+
+
+# Divide Request
+POST http://localhost:9901/api/v1/calculator/divide
+Content-Type: application/json
+
+{
+    "a": 100,
+    "b": 5
+}
+
+###
+
+
+# Fibonacci Request
+GET http://localhost:9901/api/v1/calculator/fibonacci/10000000
+Content-Type: application/json
