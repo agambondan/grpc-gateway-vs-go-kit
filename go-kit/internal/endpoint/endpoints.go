@@ -9,14 +9,32 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
-// MakeAddEndpoint creates the Add endpoint
-func MakeAddEndpoint(srv service.CalculatorService) endpoint.Endpoint {
+type Endpoints interface {
+	AddEndpoint() endpoint.Endpoint
+	SubtractEndpoint() endpoint.Endpoint
+	MultiplyEndpoint() endpoint.Endpoint
+	DivideEndpoint() endpoint.Endpoint
+	FibonacciEndpoint() endpoint.Endpoint
+}
+
+type endpoints struct {
+	srv service.CalculatorService
+}
+
+func NewEndpoints(srv service.CalculatorService) Endpoints {
+	return &endpoints{
+		srv: srv,
+	}
+}
+
+// AddEndpoint creates the Add endpoint
+func (e *endpoints) AddEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, ok := request.(*calculator.AddRequest)
 		if !ok {
 			return nil, fmt.Errorf("invalid request type")
 		}
-		result, err := srv.Add(ctx, req.A, req.B)
+		result, err := e.srv.Add(ctx, req.A, req.B)
 		if err != nil {
 			return nil, err
 		}
@@ -24,14 +42,14 @@ func MakeAddEndpoint(srv service.CalculatorService) endpoint.Endpoint {
 	}
 }
 
-// MakeSubtractEndpoint creates the Subtract endpoint
-func MakeSubtractEndpoint(srv service.CalculatorService) endpoint.Endpoint {
+// SubtractEndpoint creates the Subtract endpoint
+func (e *endpoints) SubtractEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, ok := request.(*calculator.SubtractRequest)
 		if !ok {
 			return nil, fmt.Errorf("invalid request type")
 		}
-		result, err := srv.Subtract(ctx, req.A, req.B)
+		result, err := e.srv.Subtract(ctx, req.A, req.B)
 		if err != nil {
 			return nil, err
 		}
@@ -39,14 +57,14 @@ func MakeSubtractEndpoint(srv service.CalculatorService) endpoint.Endpoint {
 	}
 }
 
-// MakeMultiplyEndpoint creates the Multiply endpoint
-func MakeMultiplyEndpoint(srv service.CalculatorService) endpoint.Endpoint {
+// MultiplyEndpoint creates the Multiply endpoint
+func (e *endpoints) MultiplyEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, ok := request.(*calculator.MultiplyRequest)
 		if !ok {
 			return nil, fmt.Errorf("invalid request type")
 		}
-		result, err := srv.Multiply(ctx, req.A, req.B)
+		result, err := e.srv.Multiply(ctx, req.A, req.B)
 		if err != nil {
 			return nil, err
 		}
@@ -54,14 +72,14 @@ func MakeMultiplyEndpoint(srv service.CalculatorService) endpoint.Endpoint {
 	}
 }
 
-// MakeDivideEndpoint creates the Divide endpoint
-func MakeDivideEndpoint(srv service.CalculatorService) endpoint.Endpoint {
+// DivideEndpoint creates the Divide endpoint
+func (e *endpoints) DivideEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, ok := request.(*calculator.DivideRequest)
 		if !ok {
 			return nil, fmt.Errorf("invalid request type")
 		}
-		result, err := srv.Divide(ctx, req.A, req.B)
+		result, err := e.srv.Divide(ctx, req.A, req.B)
 		if err != nil {
 			return nil, err
 		}
@@ -69,33 +87,17 @@ func MakeDivideEndpoint(srv service.CalculatorService) endpoint.Endpoint {
 	}
 }
 
-// MakeFibonacciEndpoint creates the Fibonacci endpoint
-func MakeFibonacciEndpoint(srv service.CalculatorService) endpoint.Endpoint {
+// FibonacciEndpoint creates the Fibonacci endpoint
+func (e *endpoints) FibonacciEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, ok := request.(*calculator.FibonacciRequest)
 		if !ok {
 			return nil, fmt.Errorf("invalid request type")
 		}
-		result, err := srv.Fibonacci(ctx, req.N)
+		result, err := e.srv.Fibonacci(ctx, req.N)
 		if err != nil {
 			return nil, err
 		}
 		return calculator.FibonacciResponse{Result: result}, nil
 	}
 }
-
-// // MakeLoopingEndpoint creates the Looping endpoint
-// func MakeLoopingEndpoint(srv service.CalculatorService) endpoint.Endpoint {
-// 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-// 		req, ok := request.(*calculator.LoopingRequest)
-// 		if !ok {
-// 			return nil, fmt.Errorf("invalid request type")
-// 		}
-// 		result, err := srv.Looping(ctx, req.N)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		// Add your logic here to perform looping and calculate time
-// 		return calculator.LoopingResponse{}, nil
-// 	}
-// }

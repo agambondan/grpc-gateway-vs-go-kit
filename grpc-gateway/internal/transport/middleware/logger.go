@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"strings"
 	"time"
 
 	"git.bluebird.id/firman.agam/grpc-gateway/internal/utils"
@@ -16,7 +15,7 @@ import (
 )
 
 func GRPCMiddleware(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
-	start := time.Now()
+	// start := time.Now()
 
 	ctx = utils.AddRequestIDToGRPCContext(ctx)
 
@@ -26,14 +25,12 @@ func GRPCMiddleware(ctx context.Context, req any, info *grpc.UnaryServerInfo, ha
 
 	response, err := handler(ctx, req)
 
-	executionTime := time.Since(start).Milliseconds()
-
-	logger.Info("GRPC Request",
-		zap.Any("method", info.FullMethod),
-		zap.Any("request", req),
-		zap.Any("response", response),
-		zap.Int64("duration", executionTime),
-	)
+	// logger.Info("GRPC Request",
+	// 	zap.Any("method", info.FullMethod),
+	// 	zap.Any("request", req),
+	// 	zap.Any("response", response),
+	// 	zap.String("duration", time.Since(start).String()),
+	// )
 
 	return response, err
 }
@@ -48,26 +45,12 @@ func HTTPMiddleware(next http.Handler) http.Handler {
 
 		r = r.WithContext(ctx)
 
-		// Log the request body if it's not empty
-		var requestMap map[string]interface{}
 		body, _ := io.ReadAll(r.Body)
-		if len(body) > 0 {
-			err := json.Unmarshal(body, &requestMap)
-			if err != nil {
-				logger.Info("failed to unmarshal request", zap.Error(err))
-			}
-
-			// Restore the request body
-			r.Body = io.NopCloser(bytes.NewBuffer(body))
-		}
+		// Restore the request body
+		r.Body = io.NopCloser(bytes.NewBuffer(body))
 
 		// Create a response recorder to capture the response
 		recorder := &responseRecorder{ResponseWriter: w, body: &bytes.Buffer{}, status: http.StatusOK}
-
-		params := make(map[string]string)
-		for k, v := range r.URL.Query() {
-			params[k] = strings.Join(v, ",")
-		}
 
 		next.ServeHTTP(recorder, r)
 
@@ -77,14 +60,20 @@ func HTTPMiddleware(next http.Handler) http.Handler {
 		if body := recorder.body.Bytes(); len(body) > 0 {
 			_ = json.Unmarshal(body, &responseMap)
 		}
+		// Log the request body if it's not empty
+		var requestMap map[string]interface{}
+		if len(body) > 0 {
+			err := json.Unmarshal(body, &requestMap)
+			if err != nil {
+				logger.Info("failed to unmarshal request", zap.Error(err))
+			}
+		}
 
 		logger.Info("HTTP Request",
-			zap.Any("params", params),
 			zap.Any("request", requestMap),
 			zap.Any("response", responseMap),
 			zap.Int("status", recorder.status),
-			zap.Int64("execution_time_microseconds", executionTime.Microseconds()),
-			zap.Int64("execution_time_milliseconds", executionTime.Milliseconds()),
+			zap.String("execution_time", executionTime.String()),
 		)
 	})
 }

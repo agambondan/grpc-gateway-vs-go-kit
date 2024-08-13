@@ -31,13 +31,8 @@ func AddRequestIDToHTTPHeader(ctx context.Context, r *http.Request, w http.Respo
 	requestID := getRequestID(r.Header.Get("X-Request-Id"))
 
 	// Set request ID in headers
-	r.Header.Set("X-Request-Id", requestID)
 	w.Header().Add("X-Request-Id", requestID)
-
-	// Add request ID to context
-	if ctx == nil {
-		ctx = context.Background()
-	}
+	
 	ctx = addRequestIDToContext(ctx, requestID)
 
 	// Add additional context fields

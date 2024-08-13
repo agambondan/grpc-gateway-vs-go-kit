@@ -4,12 +4,9 @@ package calculator;
 
 option go_package = "git.bluebird.id/firman.agam/grpc-gateway/pkg/proto/calculator";
 
-// Import gRPC-Gateway annotations
 import "google/api/annotations.proto";
 
-// Calculator service definition
 service Calculator {
-    // Unary RPC for addition
     rpc Add(AddRequest) returns (AddResponse) {
         option (google.api.http) = {
             post: "/calculator/add"
@@ -17,7 +14,6 @@ service Calculator {
         };
     }
 
-    // Unary RPC for subtraction
     rpc Subtract(SubtractRequest) returns (SubtractResponse) {
         option (google.api.http) = {
             post: "/calculator/subtract"
@@ -25,7 +21,6 @@ service Calculator {
         };
     }
 
-    // Unary RPC for multiplication
     rpc Multiply(MultiplyRequest) returns (MultiplyResponse) {
         option (google.api.http) = {
             post: "/calculator/multiply"
@@ -33,7 +28,6 @@ service Calculator {
         };
     }
 
-    // Unary RPC for division
     rpc Divide(DivideRequest) returns (DivideResponse) {
         option (google.api.http) = {
             post: "/calculator/divide"
@@ -41,22 +35,13 @@ service Calculator {
         };
     }
 
-    // Unary RPC for Fibonacci sequence
     rpc Fibonacci(FibonacciRequest) returns (FibonacciResponse) {
         option (google.api.http) = {
             get: "/calculator/fibonacci/{n}"
         };
     }
-
-    // Unary RPC for Looping sequence
-    rpc Looping(LoopingRequest) returns (LoopingResponse) {
-        option (google.api.http) = {
-            get: "/calculator/looping/{n}"
-        };
-    }
 }
 
-// Request and response messages for Add
 message AddRequest {
     double a = 1;
     double b = 2;
@@ -66,7 +51,6 @@ message AddResponse {
     double result = 1;
 }
 
-// Request and response messages for Subtract
 message SubtractRequest {
     double a = 1;
     double b = 2;
@@ -76,7 +60,6 @@ message SubtractResponse {
     double result = 1;
 }
 
-// Request and response messages for Multiply
 message MultiplyRequest {
     double a = 1;
     double b = 2;
@@ -86,7 +69,6 @@ message MultiplyResponse {
     double result = 1;
 }
 
-// Request and response messages for Divide
 message DivideRequest {
     double a = 1;
     double b = 2;
@@ -96,7 +78,6 @@ message DivideResponse {
     double result = 1;
 }
 
-// Request and response messages for Fibonacci
 message FibonacciRequest {
     int32 n = 1; 
 }
@@ -105,14 +86,4 @@ message FibonacciResponse {
     int32 result = 1;
     double time_milisecond = 2;
     double time_second = 3;
-}
-
-// Request and response messages for Looping
-message LoopingRequest {
-    double n = 1;
-}
-
-message LoopingResponse {
-    double time_milisecond = 1;
-    double time_second = 2;
 }

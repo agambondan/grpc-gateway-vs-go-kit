@@ -18,7 +18,6 @@
   "paths": {
     "/calculator/add": {
       "post": {
-        "summary": "Unary RPC for addition",
         "operationId": "Calculator_Add",
         "responses": {
           "200": {
@@ -51,7 +50,6 @@
     },
     "/calculator/divide": {
       "post": {
-        "summary": "Unary RPC for division",
         "operationId": "Calculator_Divide",
         "responses": {
           "200": {
@@ -84,7 +82,6 @@
     },
     "/calculator/fibonacci/{n}": {
       "get": {
-        "summary": "Unary RPC for Fibonacci sequence",
         "operationId": "Calculator_Fibonacci",
         "responses": {
           "200": {
@@ -114,41 +111,8 @@
         ]
       }
     },
-    "/calculator/looping/{n}": {
-      "get": {
-        "summary": "Unary RPC for Looping sequence",
-        "operationId": "Calculator_Looping",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/calculatorLoopingResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "n",
-            "in": "path",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          }
-        ],
-        "tags": [
-          "Calculator"
-        ]
-      }
-    },
     "/calculator/multiply": {
       "post": {
-        "summary": "Unary RPC for multiplication",
         "operationId": "Calculator_Multiply",
         "responses": {
           "200": {
@@ -181,7 +145,6 @@
     },
     "/calculator/subtract": {
       "post": {
-        "summary": "Unary RPC for subtraction",
         "operationId": "Calculator_Subtract",
         "responses": {
           "200": {
@@ -225,8 +188,7 @@
           "type": "number",
           "format": "double"
         }
-      },
-      "title": "Request and response messages for Add"
+      }
     },
     "calculatorAddResponse": {
       "type": "object",
@@ -248,8 +210,7 @@
           "type": "number",
           "format": "double"
         }
-      },
-      "title": "Request and response messages for Divide"
+      }
     },
     "calculatorDivideResponse": {
       "type": "object",
@@ -277,19 +238,6 @@
         }
       }
     },
-    "calculatorLoopingResponse": {
-      "type": "object",
-      "properties": {
-        "timeMilisecond": {
-          "type": "number",
-          "format": "double"
-        },
-        "timeSecond": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
     "calculatorMultiplyRequest": {
       "type": "object",
       "properties": {
@@ -301,8 +249,7 @@
           "type": "number",
           "format": "double"
         }
-      },
-      "title": "Request and response messages for Multiply"
+      }
     },
     "calculatorMultiplyResponse": {
       "type": "object",
@@ -324,8 +271,7 @@
           "type": "number",
           "format": "double"
         }
-      },
-      "title": "Request and response messages for Subtract"
+      }
     },
     "calculatorSubtractResponse": {
       "type": "object",

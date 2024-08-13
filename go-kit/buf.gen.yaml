@@ -9,17 +9,3 @@ plugins:
     opt:
       - paths=source_relative
       - require_unimplemented_servers=false
-  - plugin: buf.build/grpc-ecosystem/gateway
-    out: pkg/proto/gen
-    opt:
-      - paths=source_relative
-      - version=true
-      - warn_on_unbound_methods=true
-      - omit_package_doc=true
-      - allow_repeated_fields_in_body=true
-      - allow_delete_body=true
-  - plugin: buf.build/grpc-ecosystem/openapiv2
-    out: pkg/proto/gen
-    opt:
-      - allow_repeated_fields_in_body=true
-      - allow_delete_body=true

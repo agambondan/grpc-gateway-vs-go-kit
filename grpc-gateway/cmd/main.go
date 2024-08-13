@@ -21,6 +21,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 )
 
 func init() {
@@ -66,6 +67,10 @@ func main() {
 		}
 
 		healthServer := health.NewServer()
+		healthServer.SetServingStatus("", grpc_health_v1.HealthCheckResponse_SERVING)
+		healthServer.SetServingStatus("health", grpc_health_v1.HealthCheckResponse_SERVING)
+		healthServer.SetServingStatus("calculator", grpc_health_v1.HealthCheckResponse_SERVING)
+		
 		httpServer.RegisterHTTPHandler("/health", healthhttp.NewHealthHandler(healthServer))
 		httpServer.RegisterHTTPHandler("/metrics", promhttp.Handler())
 

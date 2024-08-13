@@ -24,27 +24,17 @@ const (
 	Calculator_Multiply_FullMethodName  = "/calculator.Calculator/Multiply"
 	Calculator_Divide_FullMethodName    = "/calculator.Calculator/Divide"
 	Calculator_Fibonacci_FullMethodName = "/calculator.Calculator/Fibonacci"
-	Calculator_Looping_FullMethodName   = "/calculator.Calculator/Looping"
 )
 
 // CalculatorClient is the client API for Calculator service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// Calculator service definition
 type CalculatorClient interface {
-	// Unary RPC for addition
 	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddResponse, error)
-	// Unary RPC for subtraction
 	Subtract(ctx context.Context, in *SubtractRequest, opts ...grpc.CallOption) (*SubtractResponse, error)
-	// Unary RPC for multiplication
 	Multiply(ctx context.Context, in *MultiplyRequest, opts ...grpc.CallOption) (*MultiplyResponse, error)
-	// Unary RPC for division
 	Divide(ctx context.Context, in *DivideRequest, opts ...grpc.CallOption) (*DivideResponse, error)
-	// Unary RPC for Fibonacci sequence
 	Fibonacci(ctx context.Context, in *FibonacciRequest, opts ...grpc.CallOption) (*FibonacciResponse, error)
-	// Unary RPC for Looping sequence
-	Looping(ctx context.Context, in *LoopingRequest, opts ...grpc.CallOption) (*LoopingResponse, error)
 }
 
 type calculatorClient struct {
@@ -105,34 +95,15 @@ func (c *calculatorClient) Fibonacci(ctx context.Context, in *FibonacciRequest, 
 	return out, nil
 }
 
-func (c *calculatorClient) Looping(ctx context.Context, in *LoopingRequest, opts ...grpc.CallOption) (*LoopingResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoopingResponse)
-	err := c.cc.Invoke(ctx, Calculator_Looping_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // CalculatorServer is the server API for Calculator service.
 // All implementations should embed UnimplementedCalculatorServer
 // for forward compatibility.
-//
-// Calculator service definition
 type CalculatorServer interface {
-	// Unary RPC for addition
 	Add(context.Context, *AddRequest) (*AddResponse, error)
-	// Unary RPC for subtraction
 	Subtract(context.Context, *SubtractRequest) (*SubtractResponse, error)
-	// Unary RPC for multiplication
 	Multiply(context.Context, *MultiplyRequest) (*MultiplyResponse, error)
-	// Unary RPC for division
 	Divide(context.Context, *DivideRequest) (*DivideResponse, error)
-	// Unary RPC for Fibonacci sequence
 	Fibonacci(context.Context, *FibonacciRequest) (*FibonacciResponse, error)
-	// Unary RPC for Looping sequence
-	Looping(context.Context, *LoopingRequest) (*LoopingResponse, error)
 }
 
 // UnimplementedCalculatorServer should be embedded to have
@@ -156,9 +127,6 @@ func (UnimplementedCalculatorServer) Divide(context.Context, *DivideRequest) (*D
 }
 func (UnimplementedCalculatorServer) Fibonacci(context.Context, *FibonacciRequest) (*FibonacciResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Fibonacci not implemented")
-}
-func (UnimplementedCalculatorServer) Looping(context.Context, *LoopingRequest) (*LoopingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Looping not implemented")
 }
 func (UnimplementedCalculatorServer) testEmbeddedByValue() {}
 
@@ -270,24 +238,6 @@ func _Calculator_Fibonacci_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Calculator_Looping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoopingRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CalculatorServer).Looping(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Calculator_Looping_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalculatorServer).Looping(ctx, req.(*LoopingRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Calculator_ServiceDesc is the grpc.ServiceDesc for Calculator service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -314,10 +264,6 @@ var Calculator_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Fibonacci",
 			Handler:    _Calculator_Fibonacci_Handler,
-		},
-		{
-			MethodName: "Looping",
-			Handler:    _Calculator_Looping_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
